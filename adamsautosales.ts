@@ -104,7 +104,7 @@ export const data: {
                     {
                         type: Extractor_Type.SPLIT,
                         pageType: PageType.LIST,
-                        order: 2,
+                        order: 1,
                         value: '<div class="row no-gutters invMainCell', 
                         active: true,
                     },

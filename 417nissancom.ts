@@ -72,7 +72,7 @@ export const data: {
                 initRequestSetting: null,
                 pdpRequestSetting: null,
                 requestSetting: {
-                    id: 2,
+                    id: 1,
                 },
                 runInterval: {
                     id: 1,

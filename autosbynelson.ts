@@ -127,7 +127,7 @@ export const data: {
                 ],
             }, 
             {
-                type: Field_Type.MILEAGE,
+                type: Field_Type.URL,
                 active: true,
                 extractors: [
                     {
@@ -218,7 +218,7 @@ export const data: {
                     {
                         type: Extractor_Type.CHANGE_CASE,
                         pageType: PageType.LIST,
-                        order: 1,
+                        order: 2,
                         value: 'lower',
                         active: true,
                     },

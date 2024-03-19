@@ -68,6 +68,13 @@ export const data: {
                         value: 'rel="next"\\shref="(?<next_page>[^"]+)"',
                         active: true,
                     },
+                    {
+                        type: Extractor_Type.PREPEND_STRING,
+                        pageType: PageType.LIST,
+                        order: 2,
+                        value: 'https://www.automaxx.com',
+                        active: true,
+                    },
                 ],
             },
             {
@@ -157,7 +164,7 @@ export const data: {
             },
             {
                 type: Field_Type.TRIM,
-                active: true,
+                active: true, 
                 extractors: [
                     {
                         type: Extractor_Type.REGEX,
@@ -247,14 +254,14 @@ export const data: {
                 ],
             },
             {
-                type: Field_Type.ENGINE_TYPE,
+                type: Field_Type.ENGINE_DESCRIPTION,
                 active: true,
                 extractors: [
                     {
                         type: Extractor_Type.REGEX,
                         pageType: PageType.PDP,
                         order: 1,
-                        value: 'Engine:<\/span>[^>]+>(?<engine>[^<]+)',
+                        value: 'Engine:<\/span>[^>]+>(?<engine_description>[^<]+)',
                         active: true,
                     },
                 ],
@@ -281,6 +288,39 @@ export const data: {
                         pageType: PageType.PDP,
                         order: 1,
                         value: '"image":"(?<images>[^"]+)"\\,"sku"',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.STOCK_TYPE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'condition="(?<stock_type>[^"]+)',
+                        active: true,
+                    },
+                    {
+                        type: Extractor_Type.CHANGE_CASE,
+                        pageType: PageType.PDP,
+                        order: 2,
+                        value: 'lower',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.FUEL_TYPE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '"fuelType":"(?<fuel_type>[^"]+)',
                         active: true,
                     },
                 ],
