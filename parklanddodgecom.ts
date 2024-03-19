@@ -127,7 +127,7 @@ export const data: {
                 ],
             }, 
             {
-                type: Field_Type.MILEAGE,
+                type: Field_Type.URL,
                 active: true,
                 extractors: [
                     {
