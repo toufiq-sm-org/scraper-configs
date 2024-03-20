@@ -21,40 +21,25 @@ export const data: {
     request: [
         {
             active: true,
-            additionalHeader: [], 
+            additionalHeader: [],
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'faulknercdjrfcom', 
-            postData: null, 
-            proxyConfig: 'default', 
+            name: 'carlylegm',
+            postData: null,
+            proxyConfig: 'default',
             referrer: null,
-            retryCount: 2, 
+            retryCount: 2,
             retryInterval: 120,
             useProxy: true,
         },
     ],
     config: {
-        name: 'faulknercdjrfcom', 
+        name: 'carlylegm',
         active: true,
         organization: {
-            id: 8,
+            id: 2,
         },
         entryPoints: [
-            {
-                active: true,
-                initRequestSetting: null, 
-                pdpRequestSetting: null, 
-                requestSetting: {
-                    id: 1, 
-                },
-                runInterval: {
-                    id: 1, 
-                },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_NEW:inventory-data-bus1/getInventory?start=0&page=1', 
-                requiredParams: null,
-                productType: ProductType.CAR, 
-                type: EntryPoint_Type.JSON, 
-            },
             {
                 active: true,
                 initRequestSetting: null,
@@ -65,48 +50,37 @@ export const data: {
                 runInterval: {
                     id: 1,
                 },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_USED:inventory-data-bus1/getInventory?start=0&page=1',
+                url: 'https://www.carlylegm.ca/inventory/new/',
                 requiredParams: null,
+                type: EntryPoint_Type.HTML,
                 productType: ProductType.CAR,
-                type: EntryPoint_Type.JSON,
-            },
+            },   
+            {
+                active: true,
+                initRequestSetting: null,
+                pdpRequestSetting: null,
+                requestSetting: {
+                    id: 1,
+                },
+                runInterval: {
+                    id: 1,
+                },
+                url: 'https://www.carlylegm.ca/inventory/used/',
+                requiredParams: null,
+                type: EntryPoint_Type.HTML,
+                productType: ProductType.CAR,
+            },   
         ],
         fields: [
             {
-                type: Field_Type.NEXT_PAGE,
+                type: Field_Type.SPLITTER,
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.PLUGIN, 
-                        pageType: PageType.LIST, 
-                        order: 1, 
-                        value: 'index_htm_next_page',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.TOTAL_PRODUCT,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.SPLIT,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.pageInfo.totalCount',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.JSON_START, 
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.pageInfo.trackingData',
+                        value: 'class="carbox-wrap', 
                         active: true,
                     },
                 ],
@@ -116,43 +90,30 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.link',
+                        value: 'data-permalink="(?<url>[^"]+)',
                         active: true,
                     },
                     {
                         type: Extractor_Type.PREPEND_STRING,
                         pageType: PageType.LIST,
                         order: 2,
-                        value: 'https://www.faulknercdjrf.com',
+                        value: 'https://www.carlylegm.com',
                         active: true,
                     },
                 ],
             },
             {
-                type: Field_Type.MAKE,
+                type: Field_Type.NEXT_PAGE,
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.make',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.MODEL,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.model',
+                        value: 'next page-numbers" href="(?<next_page>[^"]+)',
                         active: true,
                     },
                 ],
@@ -162,10 +123,62 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.modelYear',
+                        value: 'class="vehicle-title--year">\\s*(?<year>[0-9]{4})',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.MAKE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: 'class="notranslate vehicle-title--make ">\\s*(?<make>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.MODEL,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: 'class="notranslate vehicle-title--model ">\\s*(?<model>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.TRIM,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: 'title-trim[^>]+>\\s*(?<trim>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.STOCK_NUMBER,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'Stock#:<\\/span>[^>]+>\\s*(?<stock_number>[^<]+)',
                         active: true,
                     },
                 ],
@@ -176,81 +189,9 @@ export const data: {
                 extractors: [
                     {
                         type: Extractor_Type.REGEX,
-                        pageType: PageType.PDP,
-                        order: 1,
-                        value: '\\.final-price \\.price-value">(?<price>[^<]+)',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.MSRP,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.pricing.msrp',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.STOCK_TYPE,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.newOrUsed',
-                        active: true,
-                    },
-                    {
-                        type: Extractor_Type.CHANGE_CASE,
-                        pageType: PageType.LIST,
-                        order: 2, 
-                        value: 'lower',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.STOCK_NUMBER,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.stockNumber',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.BODY_STYLE,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.bodyStyle',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.TRIM,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.trim',
+                        value: 'class="currency">\\$[^>]+>[^>]+>(?<price>[0-9,]+)',
                         active: true,
                     },
                 ],
@@ -260,36 +201,23 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
                         order: 1,
-                        value: '$.odometer',
+                        value: 'data-vehicle="miles"[^>]+>(?<odometer>[^<]+)',
                         active: true,
                     },
                 ],
             },
             {
-                type: Field_Type.EXTERIOR_COLOR,
+                type: Field_Type.ENGINE_DESCRIPTION,
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
                         order: 1,
-                        value: '$.exteriorColor',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.INTERIOR_COLOR,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.interiorColor',
+                        value: 'Engine:<\\/span>[^>]+>(?<engine_description>[^<]+)',
                         active: true,
                     },
                 ],
@@ -299,23 +227,10 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
                         order: 1,
-                        value: '$.transmission',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.FUEL_TYPE,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.fuelType',
+                        value: 'Transmission:<\\/span>[^>]+>(?<transmission>[^<]+)',
                         active: true,
                     },
                 ],
@@ -325,23 +240,95 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
                         order: 1,
-                        value: '$.driveLine',
+                        value: 'Drivetrain:<\\/span>[^>]+>(?<drivetrain>[^<]+)',
                         active: true,
                     },
                 ],
             },
             {
-                type: Field_Type.IMAGES,
+                type: Field_Type.EXTERIOR_COLOR,
                 active: true,
                 extractors: [
                     {
                         type: Extractor_Type.REGEX,
                         pageType: PageType.PDP,
                         order: 1,
-                        value: '"id":[^"]+"uri":"(?<images>[^"]+)"[^"]+"thumbnail',
+                        value: 'Exterior Color:<\\/span>[^>]+>(?<exterior_color>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.INTERIOR_COLOR,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'Interior Color:<\\/span>[^>]+>(?<interior_color>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.VIN,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'VIN#:<\\/span>[^"]+"[^"]+">(?<vin>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.DESCRIPTION,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'vehicle-descriptions__value ">(?<description>[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.BODY_STYLE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'bodyStyle:"(?<body_style>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.STOCK_TYPE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: "inventory\\/(?<stock_type>[^-]+)",
+                        active: true,
+                    },
+                    {
+                        type: Extractor_Type.CHANGE_CASE,
+                        pageType: PageType.PDP,
+                        order: 2, 
+                        value: 'lower',
                         active: true,
                     },
                 ],

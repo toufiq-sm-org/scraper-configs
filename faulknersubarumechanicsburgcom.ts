@@ -24,7 +24,7 @@ export const data: {
             additionalHeader: [], 
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'faulknercdjrfcom', 
+            name: 'faulknersubarumechanicsburgcom', 
             postData: null, 
             proxyConfig: 'default', 
             referrer: null,
@@ -34,7 +34,7 @@ export const data: {
         },
     ],
     config: {
-        name: 'faulknercdjrfcom', 
+        name: 'faulknersubarumechanicsburgcom', 
         active: true,
         organization: {
             id: 8,
@@ -50,7 +50,7 @@ export const data: {
                 runInterval: {
                     id: 1, 
                 },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_NEW:inventory-data-bus1/getInventory?start=0&page=1', 
+                url: 'https://www.faulknersubarumechanicsburg.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_NEW:inventory-data-bus1/getInventory?start=0&page=1', 
                 requiredParams: null,
                 productType: ProductType.CAR, 
                 type: EntryPoint_Type.JSON, 
@@ -65,7 +65,7 @@ export const data: {
                 runInterval: {
                     id: 1,
                 },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_USED:inventory-data-bus1/getInventory?start=0&page=1',
+                url: 'https://www.faulknersubarumechanicsburg.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_USED:inventory-data-bus1/getInventory?start=0&page=1',
                 requiredParams: null,
                 productType: ProductType.CAR,
                 type: EntryPoint_Type.JSON,
@@ -126,7 +126,7 @@ export const data: {
                         type: Extractor_Type.PREPEND_STRING,
                         pageType: PageType.LIST,
                         order: 2,
-                        value: 'https://www.faulknercdjrf.com',
+                        value: 'https://www.faulknersubarumechanicsburg.com',
                         active: true,
                     },
                 ],
@@ -175,10 +175,10 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.REGEX,
-                        pageType: PageType.PDP,
+                        type: Extractor_Type.JSON_PATH,
+                        pageType: PageType.LIST,
                         order: 1,
-                        value: '\\.final-price \\.price-value">(?<price>[^<]+)',
+                        value: '$.internetPrice',
                         active: true,
                     },
                 ],

@@ -21,40 +21,25 @@ export const data: {
     request: [
         {
             active: true,
-            additionalHeader: [], 
+            additionalHeader: [],
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'faulknercdjrfcom', 
-            postData: null, 
-            proxyConfig: 'default', 
+            name: 'mcgrathmitsubishiliverpoolcomau',
+            postData: null,
+            proxyConfig: 'default',
             referrer: null,
-            retryCount: 2, 
+            retryCount: 2,
             retryInterval: 120,
             useProxy: true,
         },
     ],
     config: {
-        name: 'faulknercdjrfcom', 
+        name: 'mcgrathmitsubishiliverpoolcomau',
         active: true,
         organization: {
-            id: 8,
+            id: 2,
         },
         entryPoints: [
-            {
-                active: true,
-                initRequestSetting: null, 
-                pdpRequestSetting: null, 
-                requestSetting: {
-                    id: 1, 
-                },
-                runInterval: {
-                    id: 1, 
-                },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_NEW:inventory-data-bus1/getInventory?start=0&page=1', 
-                requiredParams: null,
-                productType: ProductType.CAR, 
-                type: EntryPoint_Type.JSON, 
-            },
             {
                 active: true,
                 initRequestSetting: null,
@@ -65,48 +50,67 @@ export const data: {
                 runInterval: {
                     id: 1,
                 },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_USED:inventory-data-bus1/getInventory?start=0&page=1',
+                url: 'https://www.mcgrathmitsubishiliverpool.com.au/all-stock/list/?q=perpage%3A30',
                 requiredParams: null,
+                type: EntryPoint_Type.HTML,
                 productType: ProductType.CAR,
-                type: EntryPoint_Type.JSON,
-            },
+            },   
+            {
+                active: true,
+                initRequestSetting: null,
+                pdpRequestSetting: null,
+                requestSetting: {
+                    id: 1,
+                },
+                runInterval: {
+                    id: 1,
+                },
+                url: 'https://www.mcgrathmitsubishiliverpool.com.au/new-mitsubishi-range-liverpool/mitsubishi/',
+                requiredParams: null,
+                type: EntryPoint_Type.HTML,
+                productType: ProductType.CAR,
+            },   
+            {
+                active: true,
+                initRequestSetting: null,
+                pdpRequestSetting: null,
+                requestSetting: {
+                    id: 1,
+                },
+                runInterval: {
+                    id: 1,
+                },
+                url: 'https://www.mcgrathmitsubishiliverpool.com.au/used-mitsubishi-liverpool/',
+                requiredParams: null,
+                type: EntryPoint_Type.HTML,
+                productType: ProductType.CAR,
+            },   
+            {
+                active: true,
+                initRequestSetting: null,
+                pdpRequestSetting: null,
+                requestSetting: {
+                    id: 1,
+                },
+                runInterval: {
+                    id: 1,
+                },
+                url: 'https://www.mcgrathmitsubishiliverpool.com.au/mitsubishi-demos-liverpool/?q=perpage%3A30',
+                requiredParams: null,
+                type: EntryPoint_Type.HTML,
+                productType: ProductType.CAR,
+            },   
         ],
         fields: [
             {
-                type: Field_Type.NEXT_PAGE,
+                type: Field_Type.SPLITTER,
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.PLUGIN, 
-                        pageType: PageType.LIST, 
-                        order: 1, 
-                        value: 'index_htm_next_page',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.TOTAL_PRODUCT,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.SPLIT,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.pageInfo.totalCount',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.JSON_START, 
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.pageInfo.trackingData',
+                        value: '<div class="col-sm-6 col-md-4 stock-item-col hidden-xs">', 
                         active: true,
                     },
                 ],
@@ -116,43 +120,23 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.link',
-                        active: true,
-                    },
-                    {
-                        type: Extractor_Type.PREPEND_STRING,
-                        pageType: PageType.LIST,
-                        order: 2,
-                        value: 'https://www.faulknercdjrf.com',
+                        value: '<a href="(?<url>[^"]+)"\\s*title="[^>]+><h3[^>]+>(?<title>.*?(?<year>[0-9]{4}) (?<make>[^\\s]+) (?<model>[^\\s]+)[^<]+)',
                         active: true,
                     },
                 ],
             },
             {
-                type: Field_Type.MAKE,
+                type: Field_Type.NEXT_PAGE,
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.make',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.MODEL,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.model',
+                        value: 'rel="next" *(?:data-href|href)="(?<next_page>[^"]+)"',
                         active: true,
                     },
                 ],
@@ -162,10 +146,62 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.modelYear',
+                        value: '<a href="(?<url>[^"]+)"\\s*title="[^>]+><h3[^>]+>(?<title>.*?(?<year>[0-9]{4}) (?<make>[^\\s]+) (?<model>[^\\s]+)[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.MAKE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: '<a href="(?<url>[^"]+)"\\s*title="[^>]+><h3[^>]+>(?<title>.*?(?<year>[0-9]{4}) (?<make>[^\\s]+) (?<model>[^\\s]+)[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.MODEL,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: '<a href="(?<url>[^"]+)"\\s*title="[^>]+><h3[^>]+>(?<title>.*?(?<year>[0-9]{4}) (?<make>[^\\s]+) (?<model>[^\\s]+)[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.TITLE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: '<a href="(?<url>[^"]+)"\\s*title="[^>]+><h3[^>]+>(?<title>.*?(?<year>[0-9]{4}) (?<make>[^\\s]+) (?<model>[^\\s]+)[^<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.TRIM,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: '<a href="(?<url>[^"]+)"\\s*title="[^>]+><h3[^>]+>(?<title>.*?(?<year>[0-9]{4}) (?<make>[^\\s]+) (?<model>[^\\s]+)[^<]+)',
                         active: true,
                     },
                 ],
@@ -176,120 +212,9 @@ export const data: {
                 extractors: [
                     {
                         type: Extractor_Type.REGEX,
-                        pageType: PageType.PDP,
-                        order: 1,
-                        value: '\\.final-price \\.price-value">(?<price>[^<]+)',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.MSRP,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.pricing.msrp',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.STOCK_TYPE,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.newOrUsed',
-                        active: true,
-                    },
-                    {
-                        type: Extractor_Type.CHANGE_CASE,
-                        pageType: PageType.LIST,
-                        order: 2, 
-                        value: 'lower',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.STOCK_NUMBER,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.stockNumber',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.BODY_STYLE,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.bodyStyle',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.TRIM,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.trim',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.ODOMETER,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.odometer',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.EXTERIOR_COLOR,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.exteriorColor',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.INTERIOR_COLOR,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.interiorColor',
+                        value: '<h2 class="price_stocklist stocklist-price ">\\s*(?<price>\\$[0-9,]+)',
                         active: true,
                     },
                 ],
@@ -299,10 +224,62 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.transmission',
+                        value: 'Transmission<\\/td>\\s*<td>\\s*(?<transmission>[^\\n<]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.ODOMETER,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: 'Odometer<\\/td>\\s*<td>\\s*(?<odometer>[^\\s*]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.STOCK_TYPE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '"Condition":"(?<stock_type>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.ENGINE_DESCRIPTION,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '"vehicleEngine":"(?<engine_description>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.EXTERIOR_COLOR,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '"color":"(?<exterior_color>[^"]+)',
                         active: true,
                     },
                 ],
@@ -312,10 +289,49 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: 'fuelType":\\s*"(?<fuel_type>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.STOCK_NUMBER,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.fuelType',
+                        value: '"sku":"(?<stock_number>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.VIN,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '"vehicleIdentificationNumber":"(?<vin>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.BODY_STYLE,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '"bodyType":"(?<body_style>[^"]+)',
                         active: true,
                     },
                 ],
@@ -325,10 +341,23 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
                         order: 1,
-                        value: '$.driveLine',
+                        value: 'driveWheelConfiguration":"(?<drivetrain>[^"]+)',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.DESCRIPTION,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '<meta name="description" content="(?<description>[^"]+)"><meta',
                         active: true,
                     },
                 ],
@@ -341,7 +370,7 @@ export const data: {
                         type: Extractor_Type.REGEX,
                         pageType: PageType.PDP,
                         order: 1,
-                        value: '"id":[^"]+"uri":"(?<images>[^"]+)"[^"]+"thumbnail',
+                        value: '<a class="enlarge-image" href="(?<images>[^"]+)"',
                         active: true,
                     },
                 ],

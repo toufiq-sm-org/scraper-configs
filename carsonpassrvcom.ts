@@ -17,43 +17,74 @@ export const data: {
     request: CreateRequestSettingRequestDto[];
     config: CreateScraperConfigRequestDto;
 } = {
-    plugins: [],
+    plugins: [
+        {
+            name: 'carsonpassrvcom_url',
+            code: `function (value)
+                     jsonData = json.decode(value);
+                     if jsonData.type == "U" then
+                        return "https://www.carsonpassrv.com/default.asp?page=xPreOwnedInventoryDetail&id=" .. jsonData.id
+                     else
+                        return "https://www.carsonpassrv.com/default.asp?page=xNewInventoryDetail&id=" .. jsonData.id
+                     end
+                   end
+                  `,
+            description: '',
+            active: true,
+            tags: [],
+        },
+        {
+            name: 'carsonpassrvcom_stock_type',
+            code: `function (value)
+                     jsonData = json.decode(value);
+                     if jsonData.type == "U" then
+                        return "used"
+                     else
+                        return "new"
+                     end
+                   end
+                  `,
+            description: '',
+            active: true,
+            tags: [],
+        },
+    ],
     request: [
         {
             active: true,
-            additionalHeader: [], 
+            additionalHeader: [],
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'faulknercdjrfcom', 
-            postData: null, 
-            proxyConfig: 'default', 
+            name: 'carsonpassrvcom',
+            postData: null,
+            proxyConfig: 'default',
             referrer: null,
-            retryCount: 2, 
+            retryCount: 2,
             retryInterval: 120,
             useProxy: true,
         },
     ],
     config: {
-        name: 'faulknercdjrfcom', 
+        name: 'carsonpassrvcom',
         active: true,
         organization: {
-            id: 8,
+            id: 5,
         },
         entryPoints: [
             {
                 active: true,
-                initRequestSetting: null, 
-                pdpRequestSetting: null, 
+                initRequestSetting: null,
+                pdpRequestSetting: null,
                 requestSetting: {
-                    id: 1, 
+                    id: 1,
                 },
                 runInterval: {
-                    id: 1, 
+                    id: 1,
                 },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_NEW:inventory-data-bus1/getInventory?start=0&page=1', 
+                url: 'https://www.carsonpassrv.com/imglib/Inventory/cache/5760/NVehInv.js?v=1640195',
                 requiredParams: null,
-                productType: ProductType.CAR, 
-                type: EntryPoint_Type.JSON, 
+                productType: ProductType.RV,
+                type: EntryPoint_Type.JSON,
             },
             {
                 active: true,
@@ -65,48 +96,36 @@ export const data: {
                 runInterval: {
                     id: 1,
                 },
-                url: 'https://www.faulknercdjrf.com/apis/widget/INVENTORY_LISTING_DEFAULT_AUTO_USED:inventory-data-bus1/getInventory?start=0&page=1',
+                url: 'https://www.carsonpassrv.com/imglib/Inventory/cache/5760/UVehInv.js?v=2185392',
                 requiredParams: null,
-                productType: ProductType.CAR,
+                productType: ProductType.RV,
                 type: EntryPoint_Type.JSON,
             },
         ],
         fields: [
             {
-                type: Field_Type.NEXT_PAGE,
+                type: Field_Type.JSON_START,
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.PLUGIN, 
-                        pageType: PageType.LIST, 
-                        order: 1, 
-                        value: 'index_htm_next_page',
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
+                        pageType: PageType.LIST,
+                        order: 1,
+                        value: '^.*var Vehicles=<replace_with>',
                         active: true,
                     },
-                ],
-            },
-            {
-                type: Field_Type.TOTAL_PRODUCT,
-                active: true,
-                extractors: [
+                    {
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
+                        pageType: PageType.LIST,
+                        order: 2,
+                        value: '];<replace_with>]',
+                        active: true,
+                    },
                     {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.pageInfo.totalCount',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.JSON_START, 
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.pageInfo.trackingData',
+                        order: 3,
+                        value: '$',
                         active: true,
                     },
                 ],
@@ -116,17 +135,10 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.PLUGIN,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.link',
-                        active: true,
-                    },
-                    {
-                        type: Extractor_Type.PREPEND_STRING,
-                        pageType: PageType.LIST,
-                        order: 2,
-                        value: 'https://www.faulknercdjrf.com',
+                        value: 'carsonpassrvcom_url',
                         active: true,
                     },
                 ],
@@ -139,7 +151,7 @@ export const data: {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.make',
+                        value: '$.manuf',
                         active: true,
                     },
                 ],
@@ -155,6 +167,20 @@ export const data: {
                         value: '$.model',
                         active: true,
                     },
+                    {
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
+                        pageType: PageType.LIST,
+                        order: 2,
+                        value: '^([^ ]*).*<replace_with>$1',
+                        active: true,
+                    },
+                    {
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
+                        pageType: PageType.LIST,
+                        order: 2,
+                        value: '[^A-Za-z0-9 -]<replace_with>',
+                        active: true,
+                    },
                 ],
             },
             {
@@ -165,7 +191,7 @@ export const data: {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.modelYear',
+                        value: '$.bike_year',
                         active: true,
                     },
                 ],
@@ -175,23 +201,10 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.REGEX,
-                        pageType: PageType.PDP,
-                        order: 1,
-                        value: '\\.final-price \\.price-value">(?<price>[^<]+)',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.MSRP,
-                active: true,
-                extractors: [
-                    {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.pricing.msrp',
+                        value: '$.price',
                         active: true,
                     },
                 ],
@@ -201,17 +214,10 @@ export const data: {
                 active: true,
                 extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.PLUGIN,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.newOrUsed',
-                        active: true,
-                    },
-                    {
-                        type: Extractor_Type.CHANGE_CASE,
-                        pageType: PageType.LIST,
-                        order: 2, 
-                        value: 'lower',
+                        value: 'carsonpassrvcom_stock_type',
                         active: true,
                     },
                 ],
@@ -224,7 +230,7 @@ export const data: {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.stockNumber',
+                        value: '$.stockno',
                         active: true,
                     },
                 ],
@@ -237,20 +243,7 @@ export const data: {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.bodyStyle',
-                        active: true,
-                    },
-                ],
-            },
-            {
-                type: Field_Type.TRIM,
-                active: true,
-                extractors: [
-                    {
-                        type: Extractor_Type.JSON_PATH,
-                        pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.trim',
+                        value: '$.vehtypename',
                         active: true,
                     },
                 ],
@@ -263,7 +256,7 @@ export const data: {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.odometer',
+                        value: '$.miles',
                         active: true,
                     },
                 ],
@@ -276,24 +269,19 @@ export const data: {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.exteriorColor',
+                        value: '$.color',
                         active: true,
                     },
-                ],
-            },
-            {
-                type: Field_Type.INTERIOR_COLOR,
-                active: true,
-                extractors: [
                     {
-                        type: Extractor_Type.JSON_PATH,
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
                         pageType: PageType.LIST,
-                        order: 1,
-                        value: '$.interiorColor',
+                        order: 2,
+                        value: '&<replace_with>and',
                         active: true,
                     },
                 ],
             },
+
             {
                 type: Field_Type.TRANSMISSION,
                 active: true,
@@ -308,27 +296,40 @@ export const data: {
                 ],
             },
             {
-                type: Field_Type.FUEL_TYPE,
+                type: Field_Type.VIN,
                 active: true,
                 extractors: [
                     {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.fuelType',
+                        value: '$.vin',
                         active: true,
                     },
                 ],
             },
             {
-                type: Field_Type.DRIVETRAIN,
+                type: Field_Type.ENGINE_TYPE,
                 active: true,
                 extractors: [
                     {
                         type: Extractor_Type.JSON_PATH,
                         pageType: PageType.LIST,
                         order: 1,
-                        value: '$.driveLine',
+                        value: '$.engine',
+                        active: true,
+                    },
+                ],
+            },
+            {
+                type: Field_Type.DESCRIPTION,
+                active: true,
+                extractors: [
+                    {
+                        type: Extractor_Type.REGEX,
+                        pageType: PageType.PDP,
+                        order: 1,
+                        value: '<meta name="description" content="(?<description>[^"]+)',
                         active: true,
                     },
                 ],
@@ -341,7 +342,21 @@ export const data: {
                         type: Extractor_Type.REGEX,
                         pageType: PageType.PDP,
                         order: 1,
-                        value: '"id":[^"]+"uri":"(?<images>[^"]+)"[^"]+"thumbnail',
+                        value: '<li class="photo image_[0-9]+"[^>]+><a\\s*[^\\s]+\\s*href="[^"]+"\\s*data-src="(?<images>[^"]+)"',
+                        active: true,
+                    },
+                    {
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
+                        pageType: PageType.PDP,
+                        order: 2,
+                        value: '120x90<replace_with>800x600',
+                        active: true,
+                    },
+                    {
+                        type: Extractor_Type.SEARCH_AND_REPLACE,
+                        pageType: PageType.PDP,
+                        order: 2,
+                        value: '_th.jpg<replace_with>.jpg',
                         active: true,
                     },
                 ],
