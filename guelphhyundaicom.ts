@@ -24,7 +24,7 @@ export const data: {
             additionalHeader: [],
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'gphyundaicom',
+            name: 'guelphhyundaicom',
             postData: null,
             proxyConfig: 'default',
             referrer: null,
@@ -34,7 +34,7 @@ export const data: {
         },
     ],
     config: {
-        name: 'gphyundaicom',
+        name: 'guelphhyundaicom',
         active: true,
         organization: {
             id: 177,
