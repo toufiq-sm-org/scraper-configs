@@ -24,7 +24,7 @@ export const data: {
             additionalHeader: [],
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'northland_hyundaica',
+            name: 'londonnissanca',
             postData: null,
             proxyConfig: 'default',
             referrer: null,
@@ -34,7 +34,7 @@ export const data: {
         },
     ],
     config: {
-        name: 'northland_hyundaica',
+        name: 'londonnissanca',
         active: true,
         organization: {
             id: 177,
