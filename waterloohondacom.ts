@@ -375,7 +375,7 @@ export const data: {
                         type: Extractor_Type.REGEX,
                         pageType: PageType.PDP,
                         order: 1,
-                        value: "img class='swiper-lazy'\\s*data\-src='(?<images>[^']+)",
+                        value: "img class='swiper-lazy'\\s*data\\-src='(?<images>[^']+)",
                         active: true,
                     },
                 ],
