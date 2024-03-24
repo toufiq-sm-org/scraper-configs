@@ -24,7 +24,7 @@ export const data: {
             additionalHeader: [],
             contentType: null,
             method: RequestSetting_Method.GET,
-            name: 'inamotorscom',
+            name: 'homefieldfordcom',
             postData: null,
             proxyConfig: 'default',
             referrer: null,
@@ -34,7 +34,7 @@ export const data: {
         },
     ],
     config: {
-        name: 'inamotorscom',
+        name: 'homefieldfordcom',
         active: true,
         organization: {
             id: 2,
